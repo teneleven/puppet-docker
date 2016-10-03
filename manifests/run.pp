@@ -1,5 +1,5 @@
 /**
- * Run a container using docker::run 
+ * Run a container using docker::run
  * If puppet_dir fact is set, also mounts the puppet dir using the puppet_dir fact
  */
 define dockerbridge::run (

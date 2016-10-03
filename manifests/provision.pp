@@ -1,6 +1,8 @@
 define dockerbridge::provision (
-  $type  = undef,
-  $hosts = []
+  $app   = undef,
+  $hosts = [],
+
+  $extra_options = {}
 ) {
 
   include dockerbridge::params
@@ -16,23 +18,23 @@ define dockerbridge::provision (
   /* start container first, if we're using docker */
   if ($dockerbridge::params::provision_with == 'docker') {
     dockerbridge::run { $title:
-      type => $type,
+      app_type => $app,
       options  => { env => [
         "FACTER_project_name=${title}",
-        "FACTER_type=${type}",
+        "FACTER_type=${app}",
         "FACTER_app_hosts=${host_str}"
       ]}
     }
   } elsif ($dockerbridge::params::provision_with == 'docker_compose') {
     dockerbridge::compose { $title:
-      type => $type,
-      env      => ["COMPOSE_type=${type}", "COMPOSE_APP_HOSTS=${host_str}"]
+      app_type => $app,
+      env      => ["COMPOSE_type=${app}", "COMPOSE_APP_HOSTS=${host_str}"]
     }
   }
 
   if ($dockerbridge::params::provision_with == 'shell') {
     $provision_args = merge({
-      env       => ["FACTER_project_name=${title}", "FACTER_type=${type}", "FACTER_app_hosts=${host_str}"],
+      env       => ["FACTER_project_name=${title}", "FACTER_type=${app}", "FACTER_app_hosts=${host_str}"],
     }, $extra_options)
   } else {
     $provision_args = $extra_options

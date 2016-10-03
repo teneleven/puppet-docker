@@ -7,15 +7,15 @@ define dockerbridge::compose (
   include ::dockerbridge
   include ::dockerbridge::image
 
-  $compose_fallback_dir = $dockerbridge::compose_fallback_dir ? {
-    undef   => "${dockerbridge::compose_dir}",
-    default => "${dockerbridge::compose_fallback_dir}",
+  $compose_fallback_dir = $dockerbridge::params::compose_fallback_dir ? {
+    undef   => "${dockerbridge::params::compose_dir}",
+    default => "${dockerbridge::params::compose_fallback_dir}",
   }
 
-  $compose_app_name_path = "${dockerbridge::compose_dir}/${app_name}/${dockerbridge::compose_file}"
-  $compose_app_type_path = "${dockerbridge::compose_dir}/${app_type}/${dockerbridge::compose_file}"
-  $compose_app_type_fallback_path = "${compose_fallback_dir}/${app_type}/${dockerbridge::compose_file}"
-  $compose_fallback_path = "${compose_fallback_dir}/${dockerbridge::compose_default}"
+  $compose_app_name_path = "${dockerbridge::params::compose_dir}/${app_name}/${dockerbridge::params::compose_file}"
+  $compose_app_type_path = "${dockerbridge::params::compose_dir}/${app_type}/${dockerbridge::params::compose_file}"
+  $compose_app_type_fallback_path = "${compose_fallback_dir}/${app_type}/${dockerbridge::params::compose_file}"
+  $compose_fallback_path = "${compose_fallback_dir}/${dockerbridge::params::compose_default}"
 
   $compose_environment = $env ? {
     undef => ["COMPOSE_PROJECT_NAME=${app_name}", "COMPOSE_APP_TYPE=${app_type}"],
