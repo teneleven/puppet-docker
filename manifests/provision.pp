@@ -21,26 +21,24 @@ define dockerbridge::provision (
       app_type => $app,
       options  => { env => [
         "FACTER_project_name=${title}",
-        "FACTER_type=${app}",
+        "FACTER_app_type=${app}",
         "FACTER_app_hosts=${host_str}"
       ]}
     }
   } elsif ($dockerbridge::params::provision_with == 'docker_compose') {
     dockerbridge::compose { $title:
       app_type => $app,
-      env      => ["COMPOSE_type=${app}", "COMPOSE_APP_HOSTS=${host_str}"]
+      env      => ["COMPOSE_APP_TYPE=${app}", "COMPOSE_APP_HOSTS=${host_str}"]
     }
   }
 
   if ($dockerbridge::params::provision_with == 'shell') {
     $provision_args = merge({
-      env       => ["FACTER_project_name=${title}", "FACTER_type=${app}", "FACTER_app_hosts=${host_str}"],
+      env       => ["FACTER_project_name=${title}", "FACTER_app_type=${app}", "FACTER_app_hosts=${host_str}"],
     }, $extra_options)
   } else {
     $provision_args = $extra_options
   }
-
-  notice("Provisioning ${title}...")
 
   create_resources("dockerbridge::provision::${dockerbridge::params::provision_with}", { $title => $provision_args })
 
