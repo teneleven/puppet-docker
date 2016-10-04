@@ -10,7 +10,6 @@ define dockerbridge::run (
   $default_image    = 'base',
   $default_env      = ['FACTER_is_container=1'],
 ) {
-  include ::dockerbridge
   include ::dockerbridge::params
 
   $real_puppet_mount = $puppet_mount ? {

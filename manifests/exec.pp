@@ -7,8 +7,6 @@ define dockerbridge::exec (
   /* docker::exec options */
   $options   = {}
 ) {
-  include ::dockerbridge
-
   create_resources('::docker::exec', { "exec-${title}" => merge({
     container     => $container,
     sanitise_name => false,

@@ -4,7 +4,6 @@ define dockerbridge::provision::docker_compose (
 ) {
 
   include ::dockerbridge
-  include ::dockerbridge::image
   include ::dockerbridge::params
 
   dockerbridge::provision::docker { $app_name:

@@ -5,7 +5,6 @@ define dockerbridge::compose (
 ) {
 
   include ::dockerbridge
-  include ::dockerbridge::image
 
   $compose_fallback_dir = $dockerbridge::params::compose_fallback_dir ? {
     undef   => "${dockerbridge::params::compose_dir}",
@@ -27,8 +26,7 @@ define dockerbridge::compose (
     command     => "docker-compose -f ${compose_app_name_path} up -d",
     provider    => 'shell',
     environment => $compose_environment,
-    onlyif      => "/usr/bin/test -e ${compose_app_name_path}",
-    require     => Class[dockerbridge::image]
+    onlyif      => "/usr/bin/test -e ${compose_app_name_path}"
   }
 
   if $app_type {
@@ -38,8 +36,7 @@ define dockerbridge::compose (
       provider    => 'shell',
       environment => $compose_environment,
       unless      => "/usr/bin/test -e ${compose_app_name_path}",
-      onlyif      => "/usr/bin/test -e ${compose_app_type_path}",
-      require     => Class[dockerbridge::image]
+      onlyif      => "/usr/bin/test -e ${compose_app_type_path}"
     }
 
     /* compose app_type fallback */
@@ -48,8 +45,7 @@ define dockerbridge::compose (
       provider    => 'shell',
       environment => $compose_environment,
       unless      => "/usr/bin/test -e ${compose_app_name_path} || /usr/bin/test -e ${compose_app_type_path}",
-      onlyif      => "/usr/bin/test -e ${compose_app_type_fallback_path}",
-      require     => Class[dockerbridge::image]
+      onlyif      => "/usr/bin/test -e ${compose_app_type_fallback_path}"
     }
   }
 
@@ -58,8 +54,7 @@ define dockerbridge::compose (
     command     => "docker-compose -f ${compose_fallback_path} up -d",
     provider    => 'shell',
     environment => $compose_environment,
-    unless      => "/usr/bin/test -e ${compose_app_name_path} || /usr/bin/test -e ${compose_app_type_path} || /usr/bin/test -e ${compose_app_type_fallback_path}",
-    require     => Class[dockerbridge::image]
+    unless      => "/usr/bin/test -e ${compose_app_name_path} || /usr/bin/test -e ${compose_app_type_path} || /usr/bin/test -e ${compose_app_type_fallback_path}"
   }
 
 }

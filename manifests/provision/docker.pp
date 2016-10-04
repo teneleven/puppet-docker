@@ -7,7 +7,6 @@ define dockerbridge::provision::docker (
 ) {
 
   include ::dockerbridge
-  include ::dockerbridge::image
   include ::dockerbridge::params
 
   /* provision */
