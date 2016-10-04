@@ -7,7 +7,9 @@ define dockerbridge::provision (
 
   include dockerbridge::params
 
-  if (is_array($hosts)) {
+  if (empty($hosts)) {
+    $host_str = regsubst($dockerbridge::params::default_hosts, '\$\{project_name\}', $title, 'GI')
+  } elsif (is_array($hosts)) {
     $host_str = join($hosts, ',')
   } elsif (is_string($hosts)) {
     $host_str = $hosts

@@ -54,15 +54,10 @@ class dockerbridge (
 
   if (!empty($provision)) {
     $provision.each |$app_name, $app| {
-      $app_default_hosts = regsubst($default_hosts, '\$\{project_name\}', $app_name, 'GI')
-
       create_resources('::dockerbridge::provision', {
         $app_name => is_hash($app) ? {
           true  => $app,
-          false => {
-            'app'   => $app,
-            'hosts' => any2array($app_default_hosts)
-          }
+          false => { 'app' => $app }
         }
       })
     }
