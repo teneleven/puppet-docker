@@ -14,7 +14,7 @@ class dockerbridge::params (
 
   $docker_cmd    = 'supervisord -n', /* use this in docker-compose.yml maybe using ERB template */
   $provision_cmd = 'sh /provision.sh',
-  $reload_cmd    = 'supervisorctl reload',
+  $reload_cmd    = '/usr/bin/supervisorctl reload',
 
   $puppet_mount   = '/puppet',   /* destination mount on the container */
 
