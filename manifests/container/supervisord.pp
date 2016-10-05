@@ -35,8 +35,22 @@ class dockerbridge::container::supervisord inherits dockerbridge::params {
   }
 
   if (defined(Class['lamp::php'])) {
+    /* create symlink to php-fpm dependending on available FPM executable */
+    exec { "php-fpm-7-link":
+      command => 'ln -s /usr/sbin/php-fpm7.0 /usr/sbin/php-fpm',
+      onlyif  => 'test -x /usr/sbin/php-fpm7.0',
+      unless  => 'test -e /usr/sbin/php-fpm',
+      path    => ['/bin', '/usr/bin'],
+    }
+    exec { "php-fpm-5-link":
+      command => 'ln -s /usr/sbin/php5-fpm /usr/sbin/php-fpm',
+      onlyif  => 'test -x /usr/sbin/php5-fpm',
+      unless  => 'test -x /usr/sbin/php-fpm7.0 || test -e /usr/sbin/php-fpm',
+      path    => ['/bin', '/usr/bin'],
+    }
+
     Class['lamp::php'] ~> supervisord::program { 'fpm':
-      command     => 'php5-fpm -F',
+      command     => 'php-fpm -F',
       autorestart => true,
     }
     Php::Extension <| |> ~> Supervisord::Program['fpm']
