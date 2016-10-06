@@ -24,6 +24,11 @@ class dockerbridge::container::supervisord inherits dockerbridge::params {
       stopasgroup => true,
     }
     Lamp::Server::Apache::Vhost <| |> ~> Supervisord::Program['apache']
+  } else {
+    supervisord::program { 'apache':
+      ensure  => absent,
+      command => undef,
+    }
   }
 
   if (defined(Class['lamp::server::nginx'])) {
@@ -32,6 +37,11 @@ class dockerbridge::container::supervisord inherits dockerbridge::params {
       autorestart => true,
     }
     Lamp::Server::Nginx::Vhost <| |> ~> Supervisord::Program['nginx']
+  } else {
+    supervisord::program { 'nginx':
+      ensure  => absent,
+      command => undef,
+    }
   }
 
   if (defined(Class['lamp::php'])) {
@@ -57,6 +67,11 @@ class dockerbridge::container::supervisord inherits dockerbridge::params {
       autorestart => true,
     }
     Php::Extension <| |> ~> Supervisord::Program['fpm']
+  } else {
+    supervisord::program { 'fpm':
+      ensure  => absent,
+      command => undef,
+    }
   }
 
 }
