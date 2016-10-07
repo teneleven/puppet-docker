@@ -23,7 +23,7 @@ class dockerbridge::container::supervisord inherits dockerbridge::params {
       killasgroup => true,
       stopasgroup => true,
     }
-    Lamp::Server::Apache::Vhost <| |> ~> Supervisord::Program['apache']
+    Lamp::Vhost::Apache <| |> ~> Supervisord::Program['apache']
   } else {
     supervisord::program { 'apache':
       ensure  => absent,
@@ -36,7 +36,7 @@ class dockerbridge::container::supervisord inherits dockerbridge::params {
       command     => 'nginx -g "daemon off;"',
       autorestart => true,
     }
-    Lamp::Server::Nginx::Vhost <| |> ~> Supervisord::Program['nginx']
+    Lamp::Vhost::Nginx <| |> ~> Supervisord::Program['nginx']
   } else {
     supervisord::program { 'nginx':
       ensure  => absent,
