@@ -41,7 +41,7 @@ define dockerbridge::compose (
 
     /* compose app_type fallback */
     exec { "compose-type-fallback-${app_name}-${app_type}":
-      command     => "docker-compose -f ${compose_app_type_path} up -d",
+      command     => "docker-compose -f ${compose_app_type_fallback_path} up -d",
       provider    => 'shell',
       environment => $compose_environment,
       unless      => "/usr/bin/test -e ${compose_app_name_path} || /usr/bin/test -e ${compose_app_type_path}",
