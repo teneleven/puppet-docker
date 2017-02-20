@@ -4,8 +4,4 @@ class dockerbridge::container::setup inherits dockerbridge::params {
     provider => $service_provider
   }
 
-  if ($supervisord) {
-    contain dockerbridge::container::supervisord
-  }
-
 }

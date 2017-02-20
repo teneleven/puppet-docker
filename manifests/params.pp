@@ -1,7 +1,5 @@
 class dockerbridge::params (
   $service_provider = 'base',
-  $supervisord      = true,
-  $supervisorctl    = '/usr/bin/supervisorctl',
 
   /* one of *.pp files in provision subfolder */
   $provision_with = 'docker_compose',
@@ -12,7 +10,6 @@ class dockerbridge::params (
   $docker_prefix         = 'local',  /* for use to commit container after provisioning */
   $docker_compose_suffix = '_web_1', /* for use during provisioning docker-compose container */
 
-  $docker_cmd    = 'supervisord -n', /* use this in docker-compose.yml maybe using ERB template */
   $provision_cmd = 'sh /provision.sh',
   $reload_cmd    = '/usr/bin/supervisorctl reload',
 
@@ -22,5 +19,5 @@ class dockerbridge::params (
   $compose_file         = "services.yaml",
   $compose_default      = "services.yaml",
   $compose_dir          = "%{::volume_dir}/devops/apps",
-  $compose_fallback_dir = "%{::volume_dir}/devops/apps/default"
+  $compose_fallback_dir = "%{::volume_dir}/devops/apps/default",
 ) {}
