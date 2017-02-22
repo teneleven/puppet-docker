@@ -1,6 +1,7 @@
 define dockerbridge::provision (
-  $app   = undef,
-  $hosts = [],
+  $target = $title,
+  $app    = undef,
+  $hosts  = [],
 
   $extra_options = {}
 ) {
@@ -24,24 +25,26 @@ define dockerbridge::provision (
       options  => { env => [
         "FACTER_project_name=${title}",
         "FACTER_app_type=${app}",
-        "FACTER_app_hosts=${host_str}"
+        "FACTER_app_hosts=${host_str}",
+        "FACTER_app_target=${target}",
       ]}
     }
   } elsif ($dockerbridge::params::provision_with == 'docker_compose') {
     dockerbridge::compose { $title:
       app_type => $app,
-      env      => ["COMPOSE_APP_TYPE=${app}", "COMPOSE_APP_HOSTS=${host_str}"]
+      env      => ["COMPOSE_APP_TARGET=${target}", "COMPOSE_APP_TYPE=${app}", "COMPOSE_APP_HOSTS=${host_str}"]
     }
   }
 
   if ($dockerbridge::params::provision_with == 'shell') {
     $provision_args = merge({
-      env       => ["FACTER_project_name=${title}", "FACTER_app_type=${app}", "FACTER_app_hosts=${host_str}"],
+      env       => ["FACTER_project_name=${title}", "FACTER_app_type=${app}", "FACTER_app_hosts=${host_str}", "FACTER_app_target=${target}"],
     }, $extra_options)
   } else {
     $provision_args = $extra_options
   }
 
+  # this does the actual provisioning
   create_resources("dockerbridge::provision::${dockerbridge::params::provision_with}", { $title => $provision_args })
 
 }
