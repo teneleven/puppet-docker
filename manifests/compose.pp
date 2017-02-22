@@ -17,8 +17,8 @@ define dockerbridge::compose (
   $compose_fallback_path = "${compose_fallback_dir}/${dockerbridge::params::compose_default}"
 
   $compose_environment = $env ? {
-    undef => ["COMPOSE_PROJECT_NAME=${app_name}", "COMPOSE_APP_TYPE=${app_type}"],
-    default => concat(["COMPOSE_PROJECT_NAME=${app_name}"], $env)
+    undef => ["COMPOSE_PROJECT_NAME=${title}", "COMPOSE_APP_TYPE=${app_type}"],
+    default => concat(["COMPOSE_PROJECT_NAME=${title}"], $env)
   }
 
   /* compose app_name */
