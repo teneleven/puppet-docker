@@ -31,6 +31,7 @@ define dockerbridge::provision (
     }
   } elsif ($dockerbridge::params::provision_with == 'docker_compose') {
     dockerbridge::compose { $title:
+      app_name => $target,
       app_type => $app,
       env      => ["COMPOSE_APP_TARGET=${target}", "COMPOSE_APP_TYPE=${app}", "COMPOSE_APP_HOSTS=${host_str}"]
     }
