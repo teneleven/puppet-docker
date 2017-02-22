@@ -23,13 +23,18 @@ class dockerbridge (
   }
 
   if (!empty($images)) {
-    $images.each |$name| {
-      $options = $containers[$name] ? {
-        undef   => {},
-        default => $containers[$name]
-      }
+    $images.each |$key, $val| {
+      if (is_hash($val)) {
+        create_resources('docker::image', { $key => $val })
+      } else {
+        $name = $val
+        $options = $containers[$name] ? {
+          undef   => {},
+          default => $containers[$name]
+        }
 
-      create_resources('docker::image', { $name => $options })
+        create_resources('docker::image', { $name => $options })
+      }
     }
   }
 
