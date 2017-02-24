@@ -34,7 +34,12 @@ define dockerbridge::run (
     undef   => $default_env
   }
 
-  create_resources('::docker::run', { $title => merge($default_options, $options, { volumes => $volumes }, { env => $env }) })
+  create_resources('::docker::run', { $title => merge(
+    $default_options,
+    $options,
+    { volumes => $volumes },
+    { env => $env }
+  ) })
 
   if ($options['depends']) {
     Docker::Run[$options['depends']] -> Docker::Run[$title]
