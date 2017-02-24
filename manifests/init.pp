@@ -3,6 +3,7 @@ class dockerbridge (
   $images     = [],
   $run        = [],
   $containers = {},
+  $compose    = {},
 
   $install_docker = false
 ) inherits dockerbridge::params {
