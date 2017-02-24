@@ -8,6 +8,9 @@ describe 'dockerbridge' do
       :operatingsystemrelease    => '16.04',
       :operatingsystemmajrelease => '16.04',
       :puppetversion             => '4.0',
+      :lsbdistid                 => 'ubuntu',
+      :lsbdistrelease            => '16.04',
+      :lsbdistcodename           => 'xenial',
     }
   }
 
@@ -22,6 +25,45 @@ describe 'dockerbridge' do
     }
 
     it { is_expected.to contain_class('dockerbridge') }
+  end
+
+  context 'install docker' do
+    let(:params) {
+      {
+        :install_docker => true,
+      }
+    }
+
+    it { is_expected.to contain_class('docker') }
+  end
+
+  context 'inside container' do
+    let(:facts) {
+      {
+        :is_container              => 1,
+        :osfamily                  => 'Debian',
+        :operatingsystem           => 'Ubuntu',
+        :operatingsystemrelease    => '16.04',
+        :operatingsystemmajrelease => '16.04',
+        :puppetversion             => '4.0',
+        :lsbdistid                 => 'ubuntu',
+        :lsbdistrelease            => '16.04',
+        :lsbdistcodename           => 'xenial',
+      }
+    }
+
+    let(:params) {
+      {
+        :install_docker => true,
+      }
+    }
+
+    it { is_expected.to contain_class('dockerbridge::container::setup') }
+
+    it { is_expected.to contain_class('docker').with(
+      'service_enable' => false,
+      # 'service_state'  => false,
+    ) }
   end
 
   context 'ubuntu image' do

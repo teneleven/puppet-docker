@@ -16,7 +16,7 @@ class dockerbridge (
     if ($::is_container) {
       class { '::docker':
         service_enable => false,
-        service_state  => undef,
+        # service_state  => false, # TODO does this need to be false ?
       }
     }
 
