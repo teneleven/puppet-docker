@@ -20,11 +20,11 @@ describe 'dockerbridge::provision' do
 
     it { is_expected.to contain_dockerbridge__run('docker-test').with(
       'options'  => { 'env' => [
-        "FACTER_project_name=docker-test",
-        "FACTER_app_type=",
-        "FACTER_app_hosts=docker-test.docker",
-        "FACTER_app_target=docker-test",
-        "FACTER_app_path=docker-test",
+        "FACTER_PROJECT_NAME=docker-test",
+        "FACTER_APP_TYPE=",
+        "FACTER_APP_HOSTS=docker-test.docker",
+        "FACTER_APP_TARGET=docker-test",
+        "FACTER_APP_PATH=docker-test",
       ]}
     ) }
 
@@ -38,9 +38,10 @@ describe 'dockerbridge::provision' do
     it { is_expected.to contain_dockerbridge__compose('docker-compose-test').with(
       'app_name' => 'docker-compose-test',
       'env' => [
-        "COMPOSE_APP_TARGET=docker-compose-test",
+        "COMPOSE_PROJECT_NAME=docker-compose-test",
         "COMPOSE_APP_TYPE=",
         "COMPOSE_APP_HOSTS=docker-compose-test.docker",
+        "COMPOSE_APP_TARGET=docker-compose-test",
         "COMPOSE_APP_PATH=docker-compose-test",
       ]
     ) }
@@ -55,11 +56,11 @@ describe 'dockerbridge::provision' do
 
     it { is_expected.to contain_dockerbridge__provision__shell('shell-test').with(
       'env' => [
-        "FACTER_project_name=shell-test",
-        "FACTER_app_type=",
-        "FACTER_app_hosts=shell-test.docker",
-        "FACTER_app_target=shell-test",
-        "FACTER_app_path=shell-test",
+        "FACTER_PROJECT_NAME=shell-test",
+        "FACTER_APP_TYPE=",
+        "FACTER_APP_HOSTS=shell-test.docker",
+        "FACTER_APP_TARGET=shell-test",
+        "FACTER_APP_PATH=shell-test",
       ]
     ) }
   end

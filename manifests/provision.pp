@@ -6,6 +6,9 @@ define dockerbridge::provision (
 
   $extra_options = {},
 
+  # facts to either prefix with FACTER_ (if provisioning with shell or docker) or COMPOSE_ (if provisioning with docker-compose)
+  $env = [],
+
   $provision_with = $dockerbridge::params::provision_with,
 ) {
 
@@ -21,29 +24,49 @@ define dockerbridge::provision (
     fail('Invalid hosts type passed to dockerbridge::provision')
   }
 
+  if (!empty($env)) {
+    $env_facts = $env
+  } else {
+    /* fill in some helpful default facts */
+    $env_facts = [
+        "project_name=${title}",
+        "app_type=${app}",
+        "app_hosts=${host_str}",
+        "app_target=${target}",
+        "app_path=${path}",
+    ]
+  }
+
+  $facter_facts = $env_facts.map |$var| {
+    $parts = split($var, '=')
+    $fact  = upcase($parts[0])
+    $val   = $parts[1]
+    "FACTER_${fact}=${val}"
+  }
+  $compose_facts = $env_facts.map |$var| {
+    $parts = split($var, '=')
+    $fact  = upcase($parts[0])
+    $val   = $parts[1]
+    "COMPOSE_${fact}=${val}"
+  }
+
   /* start container first, if we're using docker */
   if ($provision_with == 'docker') {
     dockerbridge::run { $title:
       /* app_type => $app, */
-      options  => { env => [
-        "FACTER_project_name=${title}",
-        "FACTER_app_type=${app}",
-        "FACTER_app_hosts=${host_str}",
-        "FACTER_app_target=${target}",
-        "FACTER_app_path=${path}",
-      ]}
+      options  => { env => $facter_facts }
     }
   } elsif ($provision_with == 'docker_compose') {
     dockerbridge::compose { $title:
       app_name => $target,
       app_type => $app,
-      env      => ["COMPOSE_APP_TARGET=${target}", "COMPOSE_APP_TYPE=${app}", "COMPOSE_APP_HOSTS=${host_str}", "COMPOSE_APP_PATH=${path}"]
+      env      => $compose_facts,
     }
   }
 
   if ($provision_with == 'shell') {
     $provision_args = merge({
-      env       => ["FACTER_project_name=${title}", "FACTER_app_type=${app}", "FACTER_app_hosts=${host_str}", "FACTER_app_target=${target}", "FACTER_app_path=${path}"],
+      env      => $facter_facts,
     }, $extra_options)
   } else {
     $provision_args = $extra_options
