@@ -1,5 +1,7 @@
 # puppet-docker
 
+[![Build Status](https://travis-ci.org/teneleven/puppet-docker.svg?branch=master)](https://travis-ci.org/teneleven/puppet-docker)
+
 This module is fairly complex. Here are some examples to help get you started.
 **NOTE**: one should only use this module in a *dev* environment - little
 thought has been given to security. *Use on production at your own risk*.
@@ -162,7 +164,7 @@ services:
       - FACTER_is_container=1
       # set vhost for nginx-proxy:
       - "VIRTUAL_HOST=${COMPOSE_APP_HOSTS}"
-      
+
   # DB:
   mysql:
     image: mysql
