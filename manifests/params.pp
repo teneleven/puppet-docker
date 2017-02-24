@@ -5,7 +5,7 @@ class dockerbridge::params (
   $provision_with = 'docker_compose',
 
   /* replaces ${project_name} with app's hash key */
-  $default_hosts = '%{project_name}.docker',
+  $default_hosts = '${project_name}.docker',
 
   $docker_prefix         = 'local',  /* for use to commit container after provisioning */
   $docker_compose_suffix = '_web_1', /* for use during provisioning docker-compose container */

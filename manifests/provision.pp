@@ -4,7 +4,9 @@ define dockerbridge::provision (
   $app    = undef,
   $hosts  = [],
 
-  $extra_options = {}
+  $extra_options = {},
+
+  $provision_with = $dockerbridge::params::provision_with,
 ) {
 
   include dockerbridge::params
@@ -20,9 +22,9 @@ define dockerbridge::provision (
   }
 
   /* start container first, if we're using docker */
-  if ($dockerbridge::params::provision_with == 'docker') {
+  if ($provision_with == 'docker') {
     dockerbridge::run { $title:
-      app_type => $app,
+      /* app_type => $app, */
       options  => { env => [
         "FACTER_project_name=${title}",
         "FACTER_app_type=${app}",
@@ -31,7 +33,7 @@ define dockerbridge::provision (
         "FACTER_app_path=${path}",
       ]}
     }
-  } elsif ($dockerbridge::params::provision_with == 'docker_compose') {
+  } elsif ($provision_with == 'docker_compose') {
     dockerbridge::compose { $title:
       app_name => $target,
       app_type => $app,
@@ -39,7 +41,7 @@ define dockerbridge::provision (
     }
   }
 
-  if ($dockerbridge::params::provision_with == 'shell') {
+  if ($provision_with == 'shell') {
     $provision_args = merge({
       env       => ["FACTER_project_name=${title}", "FACTER_app_type=${app}", "FACTER_app_hosts=${host_str}", "FACTER_app_target=${target}", "FACTER_app_path=${path}"],
     }, $extra_options)
@@ -48,6 +50,6 @@ define dockerbridge::provision (
   }
 
   # this does the actual provisioning
-  create_resources("dockerbridge::provision::${dockerbridge::params::provision_with}", { $title => $provision_args })
+  create_resources("dockerbridge::provision::${provision_with}", { $title => $provision_args })
 
 }
